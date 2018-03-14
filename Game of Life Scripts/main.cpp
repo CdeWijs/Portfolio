@@ -15,7 +15,7 @@ int main()
 
 	while (true)
 	{
-		// Create new grid
+		// Update grid
 		grid->generateNext();
 		goToConsoleLine(0, 0);
 	}
