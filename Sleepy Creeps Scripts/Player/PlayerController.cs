@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
-
+public class PlayerController : MonoBehaviour
+{
+    // Declare in inspector
     public LevelManager levelManager;
     public Score scoreScript;
     public float horizontalSpeed = 150.0f;

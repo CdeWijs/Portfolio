@@ -13,10 +13,9 @@ public class EnemyController : MonoBehaviour
     }
     
     public State currentState;
+    public LayerMask detectionLayer; // Player
 
-    public LayerMask detectionLayer;
-
-    private AutoIntensity autoIntensity;
+    private AutoIntensity autoIntensity; // Day/night Cycle
     private Animator animator;
     private NavMeshAgent agent;
     private Collider[] moveCollider;
@@ -58,7 +57,6 @@ public class EnemyController : MonoBehaviour
         if (agent.enabled == true)
         {
             moveCollider = Physics.OverlapSphere(transform.position, moveRadius, detectionLayer);
-
             if (moveCollider.Length > 0)
             {
                currentState = State.MOVE;
