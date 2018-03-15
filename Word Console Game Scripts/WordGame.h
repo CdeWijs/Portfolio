@@ -45,6 +45,7 @@ public:
 
 private:
 	const std::string HIDDEN_WORD = "teacup"; // Edit the word here!
+	const int MAX_TRIES = 15;
 
 	int maxTries;
 	int currentTry;
