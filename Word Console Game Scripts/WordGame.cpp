@@ -7,7 +7,7 @@ WordGame::WordGame()
 
 int WordGame::getMaxTries() const
 {
-	return maxTries;
+	return MAX_TRIES;
 }
 
 int WordGame::getCurrentTry() const
@@ -29,7 +29,7 @@ GameStatus WordGame::getGameStatus() const
 void WordGame::reset()
 {
 	currentTry = 1;
-	maxTries = getMaxTries();
+	maxTries = MAX_TRIES;
 	hiddenWord = HIDDEN_WORD;
 	correctGuess = false;
 }
