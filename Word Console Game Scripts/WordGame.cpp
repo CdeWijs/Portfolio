@@ -7,9 +7,7 @@ WordGame::WordGame()
 
 int WordGame::getMaxTries() const
 {
-	// A word with a different length, has a different number of maximum tries.
-	std::map<int, int> wordLengthToMaxTries{ { 3, 4 },{ 4, 7 },{ 5, 10 },{ 6, 15 },{ 7, 20 } };
-	return wordLengthToMaxTries[hiddenWord.length()];
+	return maxTries;
 }
 
 int WordGame::getCurrentTry() const
