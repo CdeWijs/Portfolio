@@ -3,148 +3,83 @@
 
 Grid::Grid()
 {
-	createCells();
-	totalNeighbours = 0;
+	init();
 }
 
 // Cells are only created once when a new grid is created
-void Grid::createCells()
+void Grid::init()
 {
 	srand(time(NULL));
-	for (int x = 0; x < ROWS; x++)
+	for (int x = 1; x < ROWS - 1; x++)
 	{
-		for (int y = 0; y < COLUMNS; y++)
+		for (int y = 1; y < COLUMNS - 1; y++)
 		{
-			grid[x][y] = new Cell(x, y, (rand() % 2 ? State::DEAD : State::ALIVE));
+			grid[x][y] = (rand() % 2 ? 1 : 0);
 		}
 	}
 }
 
 void Grid::generateNext()
 {
-	// Display state of every cell
-	for (int x = 0; x < ROWS; x++)
+	/// Display state of every cell
+	for (int x = 1; x < ROWS - 1; x++)
 	{
-		for (int y = 0; y < COLUMNS; y++)
+		for (int y = 1; y < COLUMNS - 1; y++)
 		{
-			std::cout << std::setw(2) << grid[x][y]->display();
+			std::cout << std::setw(2) << display(grid[x][y]);
 		}
 		std::cout << std::endl;
 	}
 
-	// Save state for every cell
-	for (int x = 0; x < ROWS; x++)
+	/// Save state for every cell
+	for (int x = 1; x < ROWS - 1; x++)
 	{
-		for (int y = 0; y < COLUMNS; y++)
+		for (int y = 1; y < COLUMNS - 1; y++)
 		{
-			grid[x][y]->savePrevState();
+			prevGrid[x][y] = grid[x][y];
 		}
 	}
 
-	// Check neighbours of every cell
-	for (int x = 0; x < ROWS; x++)
+	/// Count alive neighbours and change state of every cell
+	for (int x = 1; x < ROWS - 1; x++)
 	{
-		for (int y = 0; y < COLUMNS; y++)
+		for (int y = 1; y < COLUMNS - 1; y++)
 		{
-			checkNeighbours(grid[x][y]);
-			updateCell(grid[x][y]);
+			int n = checkNeighbours(prevGrid[x][y], x, y);
+			grid[x][y] = (isCellAlive(prevGrid[x][y], n) ? 1 : 0);
 		}
 	}
 }
 
-void Grid::checkNeighbours(Cell* cell)
+int Grid::checkNeighbours(char state, int x, int y) const
 {
-	int x = cell->getX();
-	int y = cell->getY();
-	int rows = ROWS - 1;
-	int columns = COLUMNS - 1;
-	totalNeighbours = 0;
+	// Count how many neighbours are alive.
+	int neighbours = prevGrid[x - 1][y - 1] + prevGrid[x][y - 1] + prevGrid[x + 1][y - 1] + prevGrid[x - 1][y] + 
+					 prevGrid[x + 1][y] + prevGrid[x - 1][y + 1] + prevGrid[x][y + 1] + prevGrid[x + 1][y + 1];
 
-	if (x > 0 && y > 0) // top left
-	{
-		if (grid[x - 1][y - 1]->getState() == State::ALIVE)
-		{
-			totalNeighbours++;
-		}
-	}
-	if (y > 0) // top mid
-	{
-		if (grid[x][y - 1]->getState() == State::ALIVE)
-		{
-			totalNeighbours++;
-		}
-	}
-	if (x < rows && y > 0) // top right
-	{
-		if (grid[x + 1][y - 1]->getState() == State::ALIVE)
-		{
-			totalNeighbours++;
-		}
-	}
-	if (x > 0) // left
-	{
-		if (grid[x - 1][y]->getState() == State::ALIVE)
-		{+
-			totalNeighbours++;
-		}
-	}
-	if (x < rows) // right
-	{
-		if (grid[x + 1][y]->getState() == State::ALIVE)
-		{
-			totalNeighbours++;
-		}
-	}	
-	if (x > 0 && y < columns) // bottom left
-	{
-		if (grid[x - 1][y + 1]->getState() == State::ALIVE)
-		{
-			totalNeighbours++;
-		}
-	}
-	if (y < columns) // bottom mid
-	{
-		if (grid[x][y + 1]->getState() == State::ALIVE)
-		{
-			totalNeighbours++;
-		}
-	}
-	if (x < rows && y < columns) // bottom right
-	{
-		if (grid[x + 1][y + 1]->getState() == State::ALIVE)
-		{
-			totalNeighbours++;
-		}
-	}
+	return neighbours;
 }
 
-void Grid::updateCell(Cell * cell)
+bool Grid::isCellAlive(char state, int neighbours) const
 {
-	/*/
-	Rules:
-	1.	Any live cell with fewer than two live neighbours dies, as if caused by under-population.
-	2.	Any live cell with two or three live neighbours lives on to the next generation.
-	3.	Any live cell with more than three live neighbours dies, as if by overcrowding.
-	4.	Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-	/*/
-
-	if (cell->getState() == State::ALIVE && totalNeighbours < 2)
+	if (state == 1)
 	{
-		cell->newState(State::DEAD);
+		return (neighbours == 2 || neighbours == 3);
 	}
-	else if (cell->getState() == State::ALIVE && totalNeighbours == 2 || totalNeighbours == 3)
+	else
 	{
-		cell->newState(State::ALIVE);
-	}
-	else if (cell->getState() == State::ALIVE && totalNeighbours > 3)
-	{
-		cell->newState(State::DEAD);
-	}
-	else if (cell->getState() == State::DEAD && totalNeighbours == 3)
-	{
-		cell->newState(State::ALIVE);
+		return (neighbours == 3);
 	}
 }
 
-
-
+char Grid::display(char state) const
+{
+	if (state == 1)
+	{
+		return 'O';
+	}
+	else
+	{
+		return '.';
+	}
+}

@@ -1,28 +1,25 @@
 #pragma once
 #include <iostream>
 #include <iomanip>
-#include "Cell.h"
 
 class Grid
 {
 public:
 	Grid();
 
-	static const int ROWS = 30;
-	static const int COLUMNS = 30;
+	static const int ROWS = 32;
+	static const int COLUMNS = 32;
 
 	// Create grid
-	Cell* grid[ROWS][COLUMNS];
+	char grid[ROWS][COLUMNS];
+	char prevGrid[ROWS][COLUMNS];
+	void init();
 
-	// Create cells
-	void createCells();
+	// Create new generation
 	void generateNext();
+	int checkNeighbours(char state, int x, int y) const;
+	bool isCellAlive(char state, int neighbours) const;
 
-	// Create a new generation
-	void checkNeighbours(Cell* cell);
-	void updateCell(Cell * cell);
-
-private:
-	int totalNeighbours;
+	char display(char state) const;
 };
 
