@@ -56,7 +56,7 @@ int Grid::checkNeighbours(char state, int x, int y) const
 {
 	// Count how many neighbours are alive.
 	int neighbours = prevGrid[x - 1][y - 1] + prevGrid[x][y - 1] + prevGrid[x + 1][y - 1] + prevGrid[x - 1][y] + 
-					 prevGrid[x + 1][y] + prevGrid[x - 1][y + 1] + prevGrid[x][y + 1] + prevGrid[x + 1][y + 1];
+			 prevGrid[x + 1][y] + prevGrid[x - 1][y + 1] + prevGrid[x][y + 1] + prevGrid[x + 1][y + 1];
 
 	return neighbours;
 }
