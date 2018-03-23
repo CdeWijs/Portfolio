@@ -11,8 +11,8 @@ public:
 	static const int COLUMNS = 32;
 
 	// Create grid
-	char grid[ROWS][COLUMNS];
-	char prevGrid[ROWS][COLUMNS];
+	char grid[ROWS][COLUMNS] = {};
+	char prevGrid[ROWS][COLUMNS] = {};
 	void init();
 
 	// Create new generation

@@ -6,6 +6,7 @@ Rules:
 4.	Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 /*/
 
+#include "stdafx.h"
 #include <iostream>
 #include <windows.h>
 

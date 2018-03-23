@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <time.h>
 #include "Grid.h"
 
@@ -21,7 +22,7 @@ void Grid::init()
 
 void Grid::generateNext()
 {
-	/// Display state of every cell
+	// Display state of every cell
 	for (int x = 1; x < ROWS - 1; x++)
 	{
 		for (int y = 1; y < COLUMNS - 1; y++)
@@ -31,7 +32,7 @@ void Grid::generateNext()
 		std::cout << std::endl;
 	}
 
-	/// Save state for every cell
+	// Save state for every cell
 	for (int x = 1; x < ROWS - 1; x++)
 	{
 		for (int y = 1; y < COLUMNS - 1; y++)
@@ -40,7 +41,7 @@ void Grid::generateNext()
 		}
 	}
 
-	/// Count alive neighbours and change state of every cell
+	// Count alive neighbours and change state of every cell
 	for (int x = 1; x < ROWS - 1; x++)
 	{
 		for (int y = 1; y < COLUMNS - 1; y++)
@@ -55,7 +56,7 @@ int Grid::checkNeighbours(char state, int x, int y) const
 {
 	// Count how many neighbours are alive.
 	int neighbours = prevGrid[x - 1][y - 1] + prevGrid[x][y - 1] + prevGrid[x + 1][y - 1] + prevGrid[x - 1][y] + 
-			 prevGrid[x + 1][y] + prevGrid[x - 1][y + 1] + prevGrid[x][y + 1] + prevGrid[x + 1][y + 1];
+					 prevGrid[x + 1][y] + prevGrid[x - 1][y + 1] + prevGrid[x][y + 1] + prevGrid[x + 1][y + 1];
 
 	return neighbours;
 }
