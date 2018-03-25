@@ -21,9 +21,12 @@ public:
 
 	// Create new generation
 	void generateNext();
-	void updateGrid(const grid& inPrevGrid, grid& inNewGrid);
+	void updateGrid(const grid& prevGrid, grid& newGrid);
 	int checkNeighbours(int x, int y) const;
 	bool isCellAlive(char state, int neighbours) const;
 
 	char display(char state) const;
+
+private:
+	int ping_pong;
 };
