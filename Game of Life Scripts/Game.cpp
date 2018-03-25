@@ -35,9 +35,9 @@ void Game::generateNext()
 	ping_pong = (ping_pong == 0) ? 1 : 0;
 }
 
+// Display state of every cell.
 void Game::drawGrid(const grid& newGrid)
 {
-	// Display state of every cell.
 	for (int x = 1; x < ROWS - 1; x++)
 	{
 		for (int y = 1; y < COLUMNS - 1; y++)
