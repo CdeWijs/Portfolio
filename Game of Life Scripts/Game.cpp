@@ -75,8 +75,8 @@ int Game::checkNeighbours(int x, int y) const
 {
 	// Count how many neighbours are alive.
 	int neighbours = grids[1].cells[x - 1][y - 1] + grids[1].cells[x][y - 1] + grids[1].cells[x + 1][y - 1] +
-		grids[1].cells[x - 1][y] + grids[1].cells[x + 1][y] +
-		grids[1].cells[x - 1][y + 1] + grids[1].cells[x][y + 1] + grids[1].cells[x + 1][y + 1];
+			 grids[1].cells[x - 1][y] + grids[1].cells[x + 1][y] +
+			 grids[1].cells[x - 1][y + 1] + grids[1].cells[x][y + 1] + grids[1].cells[x + 1][y + 1];
 
 	return neighbours;
 }
