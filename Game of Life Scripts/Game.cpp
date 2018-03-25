@@ -59,15 +59,9 @@ void Game::updateGrid(const grid & prevGrid, grid & newGrid)
 int Game::checkNeighbours(int x, int y) const
 {
 	// Count how many neighbours are alive.
-<<<<<<< HEAD
 	int neighbours = grids[ping_pong].cells[x - 1][y - 1] + grids[ping_pong].cells[x][y - 1] + grids[ping_pong].cells[x + 1][y - 1] +
 		grids[ping_pong].cells[x - 1][y] + grids[ping_pong].cells[x + 1][y] +
 		grids[ping_pong].cells[x - 1][y + 1] + grids[ping_pong].cells[x][y + 1] + grids[ping_pong].cells[x + 1][y + 1];
-=======
-	int neighbours = grids[1].cells[x - 1][y - 1] + grids[1].cells[x][y - 1] + grids[1].cells[x + 1][y - 1] +
-			 grids[1].cells[x - 1][y] + grids[1].cells[x + 1][y] +
-			 grids[1].cells[x - 1][y + 1] + grids[1].cells[x][y + 1] + grids[1].cells[x + 1][y + 1];
->>>>>>> 35b1d9509eb7b6fe4c4ccb3b9c25c5e98f580f21
 
 	return neighbours;
 }
