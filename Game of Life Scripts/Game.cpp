@@ -29,10 +29,12 @@ void Game::generateNext()
 	// neighbours can be checked without having to do bound checks for each one of them.
 
 	drawGrid(grids[ping_pong]);
-	updateGrid(grids[ping_pong], grids[!ping_pong]);
 
-	// Swap index.
-	ping_pong = (ping_pong == 0) ? 1 : 0;
+	const int prev_idx = ping_pong;
+	ping_pong = (ping_pong == 0) ? 1 : 0; // Flip buffer
+	const int current_idx = ping_pong;
+
+	updateGrid(grids[prev_idx], grids[current_idx]);
 }
 
 // Display state of every cell.
