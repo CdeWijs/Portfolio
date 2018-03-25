@@ -15,18 +15,19 @@ class Game
 public:
 	Game();
 
-	// Create grid
-	grid grids[2] = {};
 	void init();
-
-	// Create new generation
 	void generateNext();
-	void updateGrid(const grid& prevGrid, grid& newGrid);
-	int checkNeighbours(int x, int y) const;
-	bool isCellAlive(char state, int neighbours) const;
-
-	char display(char state) const;
 
 private:
+	// Create two buffers of grid
+	grid grids[2] = {};
+
+	void drawGrid(const grid& newGrid);
+	void updateGrid(const grid& prevGrid, grid& newGrid);
+
+	int checkNeighbours(const grid& prevGrid, int x, int y) const;
+	bool isCellAlive(char currentState, int neighbours) const;
+	char display(char state) const;
+
 	int ping_pong;
 };

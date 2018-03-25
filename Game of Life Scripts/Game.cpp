@@ -22,53 +22,59 @@ void Game::init()
 	}
 }
 
+// Create new generation
 void Game::generateNext()
 {
-	// Note: the outer edge of the grid is being skipped, so the state of the neighbours
-	// can be checked without having to do bound checks for each one of them.
+	// Note: the outer edge of the grid is not being drawn or updated, so the state of the 
+	// neighbours can be checked without having to do bound checks for each one of them.
 
-	// Display state of every cell
+	drawGrid(grids[ping_pong]);
+	updateGrid(grids[ping_pong], grids[!ping_pong]);
+
+	// Swap index.
+	ping_pong = (ping_pong == 0) ? 1 : 0;
+}
+
+void Game::drawGrid(const grid& newGrid)
+{
+	// Display state of every cell.
 	for (int x = 1; x < ROWS - 1; x++)
 	{
 		for (int y = 1; y < COLUMNS - 1; y++)
 		{
-			std::cout << std::setw(2) << display(grids[ping_pong].cells[x][y]);
+			std::cout << std::setw(2) << display(newGrid.cells[x][y]);
 		}
 		std::cout << std::endl;
 	}
-	
-	updateGrid(grids[ping_pong], grids[!ping_pong]);
-
-	ping_pong = ping_pong == 0 ? 1 : 0;
-
 }
 
+// Count alive neighbours and change state of every cell.
 void Game::updateGrid(const grid & prevGrid, grid & newGrid)
 {
-	// Count alive neighbours and change state of every cell
 	for (int x = 1; x < ROWS - 1; x++)
 	{
 		for (int y = 1; y < COLUMNS - 1; y++)
 		{
-			int totalNeighbours = checkNeighbours(x, y);
+			int totalNeighbours = checkNeighbours(prevGrid, x, y);
 			newGrid.cells[x][y] = (isCellAlive(prevGrid.cells[x][y], totalNeighbours) ? 1 : 0);
 		}
 	}
 }
 
-int Game::checkNeighbours(int x, int y) const
+// Count how many neighbours are alive.
+int Game::checkNeighbours(const grid & prevGrid, int x, int y) const
 {
-	// Count how many neighbours are alive.
-	int neighbours = grids[ping_pong].cells[x - 1][y - 1] + grids[ping_pong].cells[x][y - 1] + grids[ping_pong].cells[x + 1][y - 1] +
-		grids[ping_pong].cells[x - 1][y] + grids[ping_pong].cells[x + 1][y] +
-		grids[ping_pong].cells[x - 1][y + 1] + grids[ping_pong].cells[x][y + 1] + grids[ping_pong].cells[x + 1][y + 1];
+	int neighbours = prevGrid.cells[x - 1][y - 1] + prevGrid.cells[x][y - 1] + prevGrid.cells[x + 1][y - 1] +
+			 prevGrid.cells[x - 1][y] + prevGrid.cells[x + 1][y] +
+			 prevGrid.cells[x - 1][y + 1] + prevGrid.cells[x][y + 1] + prevGrid.cells[x + 1][y + 1];
 
 	return neighbours;
 }
 
-bool Game::isCellAlive(char state, int neighbours) const
+// Check if cell should be alive or dead, according to their neighbours.
+bool Game::isCellAlive(char currentState, int neighbours) const
 {
-	if (state == 1)
+	if (currentState == 1) // alive
 	{
 		return (neighbours == 2 || neighbours == 3);
 	}
@@ -80,7 +86,7 @@ bool Game::isCellAlive(char state, int neighbours) const
 
 char Game::display(char state) const
 {
-	if (state == 1)
+	if (state == 1) // alive
 	{
 		return 'O';
 	}
