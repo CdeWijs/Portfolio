@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "WordGame.h"
 
 WordGame::WordGame()
@@ -7,9 +8,7 @@ WordGame::WordGame()
 
 int WordGame::getMaxTries() const
 {
-	// A word with a different length, has a different number of maximum tries.
-	std::map<int, int> wordLengthToMaxTries{ { 3, 4 },{ 4, 7 },{ 5, 10 },{ 6, 15 },{ 7, 20 } };
-	return wordLengthToMaxTries[hiddenWord.length()];
+	return MAX_TRIES;
 }
 
 int WordGame::getCurrentTry() const
@@ -22,10 +21,9 @@ int WordGame::getHiddenWordLength() const
 	return hiddenWord.length();
 }
 
-GameStatus WordGame::getGameStatus() const
+GameStatus WordGame::getGameStatus(CorrectLetterCount count) const
 {
-	if (correctGuess == true) { return GameStatus::WON; }
-	else { return GameStatus::LOST; }
+	return count.CorrectPlaceCount == getHiddenWordLength() ? GameStatus::Won : GameStatus::Lost;
 }
 
 void WordGame::reset()
@@ -33,18 +31,17 @@ void WordGame::reset()
 	currentTry = 1;
 	maxTries = getMaxTries();
 	hiddenWord = HIDDEN_WORD;
-	correctGuess = false;
 }
 
-GuessStatus WordGame::checkInputValidity(std::string guess)
+GuessStatus WordGame::checkInputValidity(const std::string & guess)
 {
 	if (!isIsogram(guess))
 	{
-		return GuessStatus::NOT_ISOGRAM;
+		return GuessStatus::NotIsogram;
 	}
 	else if (guess.length() != getHiddenWordLength())
 	{
-		return GuessStatus::NOT_CORRECT_LENGTH;
+		return GuessStatus::NotCorrectLength;
 	}
 	else
 	{
@@ -53,68 +50,58 @@ GuessStatus WordGame::checkInputValidity(std::string guess)
 }
 
 // Receives a VALID guess, increments turn, and returns count
-CorrectLetterCount WordGame::submitGuess(std::string guess)
+CorrectLetterCount WordGame::submitGuess(const std::string & guess)
 {
 	currentTry++;
 	CorrectLetterCount count;
 
-	// loop through all letters in the hidden word
 	int wordLength = getHiddenWordLength();
-	for (int i = 0; i < wordLength; i++)
+
+	// Loop over all chars in guess
+	for (int i = 0; i < guess.length(); i++)
 	{
-		// loop through all letters in the guess
+		// Loop over all chars in the hidden word
 		for (int j = 0; j < wordLength; j++)
 		{
-			// If letters match
-			if (guess[i] == hiddenWord[j])
+			// Bounds check in case the hidden word is shorter than guess
+			if (i <= wordLength)
 			{
-				// If they're in the same place
-				if (i == j)
+				// If chars match
+				if (guess[i] == hiddenWord[j])
 				{
-					count.CorrectPlaceCount++;
-				}
-				// If they are in the word, but in a different place
-				else
-				{
-					count.IncorrectPlaceCount++;
+					// If they're in the same place
+					if (i == j)
+					{
+						count.CorrectPlaceCount++;
+					}
+					// If they are in the word, but in a different place
+					else
+					{
+						count.IncorrectPlaceCount++;
+					}
 				}
 			}
 		}
 	}
 
-	if (count.CorrectPlaceCount == wordLength)
-	{
-		correctGuess = true;
-	}
-	else
-	{
-		correctGuess = false;
-	}
-
 	return count;
 }
 
-bool WordGame::isIsogram(std::string guess) const
+bool WordGame::isIsogram(const std::string & guess) const
 {
-	// Create a map with all letters in the word
-	std::map<char, bool> lettersInWord;
-	for (char letter : guess)
+	int wordLength = getHiddenWordLength();
+	// Loop over all chars in guess
+	for (int i = 0; i < guess.length(); i++)
 	{
-		// Make sure everything is lowercase
-		letter = tolower(letter);
-
-		// If a letter is already present in the map, the guess is not an isogram!
-		if (lettersInWord[letter])
+		for (int j = 0; j < guess.length(); j++)
 		{
-			return false;
-		}
-		else
-		{
-			// Add the letter to the map
-			lettersInWord[letter] = true;
+			// If chars match on a different place in the word
+			if (i != j && guess[i] == guess[j])
+			{
+				return false;
+			}
 		}
 	}
 
-	// If all letters are added to the map without problem, the word is an isogram
 	return true;
 }

@@ -4,6 +4,7 @@ This acts as the View in a MVC pattern, and is responsible for all
 user interaction. For game logic see the BullCowGame class.
 */
 
+#include "stdafx.h"
 #include <iostream>
 #include <string>
 #include "WordGame.h"
@@ -11,7 +12,7 @@ user interaction. For game logic see the BullCowGame class.
 void printIntro();
 void playGame();
 std::string getValidGuess();
-void printOutcome();
+void printOutcome(CorrectLetterCount count);
 bool askToPlayAgain();
 
 WordGame wordGame;
@@ -47,27 +48,29 @@ void playGame()
 	wordGame.reset();
 	int maxTries = wordGame.getMaxTries();
 
+	CorrectLetterCount correctLetterCount;
+
 	// Ask for the player's guess while the game is NOT won...
 	// and there are still tries remaining.
-	while (wordGame.getGameStatus() != GameStatus::WON && wordGame.getCurrentTry() <= maxTries)
+	while (wordGame.getGameStatus(correctLetterCount) != GameStatus::Won && wordGame.getCurrentTry() <= maxTries)
 	{
 		std::string guess = getValidGuess();
 
 		// Submit valid guess to the game, and receive counts
-		CorrectLetterCount bullCowCount = wordGame.submitGuess(guess);
+		correctLetterCount = wordGame.submitGuess(guess);
 
-		std::cout << "Correct letters in the right position = " << bullCowCount.CorrectPlaceCount << std::endl;
-		std::cout << "Correct letters in the wrong position = " << bullCowCount.IncorrectPlaceCount << "\n\n";
+		std::cout << "Correct letters in the right position = " << correctLetterCount.CorrectPlaceCount << std::endl;
+		std::cout << "Correct letters in the wrong position = " << correctLetterCount.IncorrectPlaceCount << "\n\n";
 	}
 
-	printOutcome();
+	printOutcome(correctLetterCount);
 }
 
 // Loop until the user gives a valid guess
 std::string getValidGuess()
 {
 	std::string guess = "";
-	GuessStatus status = GuessStatus::INVALID;
+	GuessStatus status = GuessStatus::Invalid;
 
 	do
 	{
@@ -81,14 +84,14 @@ std::string getValidGuess()
 		status = wordGame.checkInputValidity(guess);
 		switch (status)
 		{
-			case GuessStatus::NOT_ISOGRAM:
+			case GuessStatus::NotIsogram:
 				std::cout << "Your input isn't an isogram! Each letter can only appear once in the word." << std::endl;
 				break;
-			case GuessStatus::NOT_CORRECT_LENGTH:
+			case GuessStatus::NotCorrectLength:
 				std::cout << "Your input isn't the correct word length! ";
 				std::cout << "Please enter a word of " << wordGame.getHiddenWordLength() << " letters." << std::endl;
 				break;
-			case GuessStatus::INVALID_CHARACTERS:
+			case GuessStatus::InvalidCharacters:
 				std::cout << "Your input contains invalid characters. Please only use letters of the alphabet." << std::endl;
 				break;
 			default:
@@ -98,9 +101,9 @@ std::string getValidGuess()
 	return guess;
 }
 
-void printOutcome()
+void printOutcome(CorrectLetterCount count)
 {
-	if (wordGame.getGameStatus() == GameStatus::WON)
+	if (wordGame.getGameStatus(count) == GameStatus::Won)
 	{
 		std::cout << "Congratulations! You guessed the word! \n" << std::endl;
 	}
