@@ -16,13 +16,14 @@ int WordGame::getCurrentTry() const
 	return currentTry;
 }
 
-int WordGame::getHiddenWordLength() const
+unsigned int WordGame::getHiddenWordLength() const
 {
 	return hiddenWord.length();
 }
 
 GameStatus WordGame::getGameStatus(CorrectLetterCount count) const
 {
+
 	return count.CorrectPlaceCount == getHiddenWordLength() ? GameStatus::Won : GameStatus::Lost;
 }
 
@@ -55,31 +56,19 @@ CorrectLetterCount WordGame::submitGuess(const std::string & guess)
 	currentTry++;
 	CorrectLetterCount count;
 
-	int wordLength = getHiddenWordLength();
-
-	// Loop over all chars in guess
-	for (int i = 0; i < guess.length(); i++)
+	for (unsigned int i = 0; guess[i] != 0; i++)
 	{
-		// Loop over all chars in the hidden word
-		for (int j = 0; j < wordLength; j++)
+		if (hiddenWord[i] != 0)
 		{
-			// Bounds check in case the hidden word is shorter than guess
-			if (i <= wordLength)
+			// If chars match and they are in the same place
+			if (guess[i] == hiddenWord[i])
 			{
-				// If chars match
-				if (guess[i] == hiddenWord[j])
-				{
-					// If they're in the same place
-					if (i == j)
-					{
-						count.CorrectPlaceCount++;
-					}
-					// If they are in the word, but in a different place
-					else
-					{
-						count.IncorrectPlaceCount++;
-					}
-				}
+				count.CorrectPlaceCount++;
+			}
+			// If they are in the word, but in a different place
+			else if (hiddenWord.find(guess[i]) != std::string::npos)
+			{
+				count.IncorrectPlaceCount++;
 			}
 		}
 	}
@@ -89,17 +78,13 @@ CorrectLetterCount WordGame::submitGuess(const std::string & guess)
 
 bool WordGame::isIsogram(const std::string & guess) const
 {
-	int wordLength = getHiddenWordLength();
-	// Loop over all chars in guess
-	for (int i = 0; i < guess.length(); i++)
+	for (unsigned int i = 0; guess[i] != 0; i++)
 	{
-		for (int j = 0; j < guess.length(); j++)
+		unsigned int found = guess.find(guess[i]);
+		// Check if this char isn't in another place in the word
+		if (found != std::string::npos && found != i)
 		{
-			// If chars match on a different place in the word
-			if (i != j && guess[i] == guess[j])
-			{
-				return false;
-			}
+			return false;
 		}
 	}
 
