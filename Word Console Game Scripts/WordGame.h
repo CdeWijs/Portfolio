@@ -11,8 +11,8 @@ This class handles the game logic.
 
 struct CorrectLetterCount
 {
-	int CorrectPlaceCount = 0;
-	int IncorrectPlaceCount = 0;
+	unsigned int CorrectPlaceCount = 0;
+	unsigned int IncorrectPlaceCount = 0;
 };
 
 enum class GuessStatus
@@ -37,7 +37,7 @@ public:
 
 	int getMaxTries() const;
 	int getCurrentTry() const;
-	int getHiddenWordLength() const;
+	unsigned int getHiddenWordLength() const;
 	GameStatus getGameStatus(CorrectLetterCount count) const;
 
 	GuessStatus checkInputValidity(const std::string&);
