@@ -3,11 +3,8 @@ This class handles the game logic.
 */
 
 #pragma once
-#include "stdafx.h"
 #include <iostream>
 #include <string>
-#include <vector>
-#include <map>
 
 struct CorrectLetterCount
 {
