@@ -3,13 +3,14 @@ This class handles the game logic.
 */
 
 #pragma once
+#include "stdafx.h"
 #include <iostream>
 #include <string>
 
 struct CorrectLetterCount
 {
-	unsigned int CorrectPlaceCount = 0;
-	unsigned int IncorrectPlaceCount = 0;
+	int CorrectPlaceCount = 0;
+	int IncorrectPlaceCount = 0;
 };
 
 enum class GuessStatus
@@ -34,11 +35,11 @@ public:
 
 	int getMaxTries() const;
 	int getCurrentTry() const;
-	unsigned int getHiddenWordLength() const;
-	GameStatus getGameStatus(CorrectLetterCount count) const;
+	int getHiddenWordLength();
+	GameStatus getGameStatus(const CorrectLetterCount count);
 
-	GuessStatus checkInputValidity(const std::string&);
-	CorrectLetterCount submitGuess(const std::string&);
+	GuessStatus checkInputValidity(std::string&) const;
+	CorrectLetterCount submitGuess(std::string&);
 	void reset();
 
 private:
@@ -49,5 +50,5 @@ private:
 	int currentTry;
 	std::string hiddenWord;
 
-	bool isIsogram(const std::string&) const;
+	bool isIsogram(std::string&) const;
 };

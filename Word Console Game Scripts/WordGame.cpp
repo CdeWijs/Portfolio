@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "WordGame.h"
 
 WordGame::WordGame()
@@ -15,14 +16,18 @@ int WordGame::getCurrentTry() const
 	return currentTry;
 }
 
-unsigned int WordGame::getHiddenWordLength() const
+int WordGame::getHiddenWordLength()
 {
-	return hiddenWord.length();
+	int length = 0;
+	for (std::string::iterator it = hiddenWord.begin(); it < hiddenWord.end(); it++)
+	{
+		length++;
+	}
+	return length;
 }
 
-GameStatus WordGame::getGameStatus(CorrectLetterCount count) const
+GameStatus WordGame::getGameStatus(const CorrectLetterCount count) 
 {
-
 	return count.CorrectPlaceCount == getHiddenWordLength() ? GameStatus::Won : GameStatus::Lost;
 }
 
@@ -33,13 +38,13 @@ void WordGame::reset()
 	hiddenWord = HIDDEN_WORD;
 }
 
-GuessStatus WordGame::checkInputValidity(const std::string & guess)
+GuessStatus WordGame::checkInputValidity(std::string & guess) const
 {
 	if (!isIsogram(guess))
 	{
 		return GuessStatus::NotIsogram;
 	}
-	else if (guess.length() != getHiddenWordLength())
+	else if (guess.length() != hiddenWord.length())
 	{
 		return GuessStatus::NotCorrectLength;
 	}
@@ -50,41 +55,47 @@ GuessStatus WordGame::checkInputValidity(const std::string & guess)
 }
 
 // Receives a VALID guess, increments turn, and returns count
-CorrectLetterCount WordGame::submitGuess(const std::string & guess)
+CorrectLetterCount WordGame::submitGuess(std::string & guess)
 {
 	currentTry++;
 	CorrectLetterCount count;
 
-	for (unsigned int i = 0; guess[i] != 0; i++)
+	int index = 0;
+	for (std::string::iterator it = guess.begin(); it < guess.end(); it++)
 	{
-		if (hiddenWord[i] != 0)
+		if (hiddenWord[index] != '/0')
 		{
 			// If chars match and they are in the same place
-			if (guess[i] == hiddenWord[i])
+			if (*it == hiddenWord[index])
 			{
 				count.CorrectPlaceCount++;
 			}
 			// If they are in the word, but in a different place
-			else if (hiddenWord.find(guess[i]) != std::string::npos)
+			else if (hiddenWord.find(*it) != std::string::npos)
 			{
 				count.IncorrectPlaceCount++;
 			}
 		}
+
+		index++;
 	}
 
 	return count;
 }
 
-bool WordGame::isIsogram(const std::string & guess) const
+bool WordGame::isIsogram(std::string & guess) const
 {
-	for (unsigned int i = 0; guess[i] != 0; i++)
+	int index = 0;
+	for (std::string::iterator it = guess.begin(); it < guess.end(); it++)
 	{
-		unsigned int found = guess.find(guess[i]);
+		int found = guess.find(*it);
 		// Check if this char isn't in another place in the word
-		if (found != std::string::npos && found != i)
+		if (found != std::string::npos && found != index)
 		{
 			return false;
 		}
+
+		index++;
 	}
 
 	return true;
